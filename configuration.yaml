@@ -40,9 +40,6 @@ google:
   client_secret: !secret google_secret
 
 ## Spotify
-spotify:
-    client_id: !secret spotify_client_id
-    client_secret: !secret spotify_secret
 
   
 #   - platform: spotify
@@ -51,29 +48,6 @@ spotify:
 #     client_secret: !secret spotify_s_secret
 #     cache_path: '.spotify_santa'
        
-## For robot vacuum & automation status
-vacuum:
-  - platform: xiaomi_miio
-    host: 192.168.178.227
-    token: !secret xiaomi_robot_token
-    
-input_text:
-  room_cleaning:
-    name: Currently Cleaning Room
-    initial: charging
-
-## Basic Presence
-device_tracker:
-  - platform: bluetooth_tracker
-    track_new_devices: true
-    interval_seconds: 5
-    consider_home: 30
-  - platform: upc_connect
-    password: !secret wifi_admin_password
-    track_new_devices: false
-    host: 192.168.178.1
-    interval_seconds: 3
-    consider_home: 30
     
 
 ## Weather
@@ -86,7 +60,7 @@ weather:
 
 binary_sensor:
   - platform: workday
-    country: NL   
+    country: UK   
 
   - platform: tod
     name: Night
@@ -146,35 +120,6 @@ switch:
     
 sensor:
 
-
-  - platform: spotify-playlist-sensor
-    client_id: !secret spotify_client_id
-    client_secret: !secret spotify_secret
-    number_of_playlists: 12
-
-  - platform: spotify-playlist-sensor
-    client_id: !secret spotify_client_id
-    client_secret: !secret spotify_secret
-    number_of_playlists: 12
-    name: SpotifyPlaylist_Santa
-    
-  - platform: plex_recently_added
-    name: Recently Added Movies # will create sensor.recently_added_movies
-    token: !secret plex_token
-    host: 192.168.178.46
-    port: 32400
-    section_types:
-    - movie
-
-  - platform: plex_recently_added
-    name: Recently Added TV  # will create sensor.recently_added_tv
-    token: !secret plex_token
-    host: 192.168.178.46
-    port: 32400
-    section_types:
-    - show
-
-
   - platform: time_date
     display_options:
       - 'time'
@@ -233,18 +178,6 @@ sensor:
       - uv_index
       - moon_phase
       - alerts
-      
-  - platform: rest
-    name: luke_cgm
-    resource: https://lajv-ichor.herokuapp.com/api/v1/entries/current.json
-    value_template: >
-      sgv:{{value_json[0].sgv}}, trend:{{value_json[0].trend}}, direction:{{value_json[0].direction}}, time:{{ ( (as_timestamp(now()) - as_timestamp(value_json[0].dateString) ) / 60) | round(0) }}
-
-  - platform: rest
-    name: luke_treatments
-    resource: https://lajv-ichor.herokuapp.com/api/v1/treatments.json
-    value_template: >
-      carbs:{{value_json[0].carbs}}, eventType:{{value_json[0].eventType}}, insulin:{{value_json[0].insulin}}, time:{{ (as_timestamp(value_json[0].created_at)) }}
 
       
 ####################################################################################### 
@@ -252,37 +185,7 @@ sensor:
 #######################################################################################        
       
   - platform: template
-    sensors:
-
-      luke_cgm_sgv:
-        value_template: >
-          {{ states('sensor.luke_cgm') | regex_findall_index("sgv:(\d+)") }}
-        unit_of_measurement: "mmol"
-      luke_cgm_trend:
-        value_template: >
-          {{ states('sensor.luke_cgm') | regex_findall_index("trend:(\d+)") }}
-      luke_cgm_direction:
-        value_template: >
-          {{ states('sensor.luke_cgm') | regex_findall_index("direction:(\w+)") }}
-      luke_cgm_time:
-        value_template: >
-          {{ states('sensor.luke_cgm') | regex_findall_index("time:(\d+)") }}
-      luke_cgm_sgv_mmol:
-        value_template: >
-          {%- set mgdl = states('sensor.luke_cgm_sgv') | float %}
-          {%- set mmol = (mgdl / 18) %}
-          {{ mmol | float | round(1)}}
-        unit_of_measurement: "mmol/L"
-    
-      luke_inslulin:
-        value_template: >
-          {{ states('sensor.luke_treatments') | regex_findall_index("insulin:(\d+)") }}
-        unit_of_measurement: "units"
-
-      luke_carbs:
-        value_template: >
-          {{ states('sensor.luke_treatments') | regex_findall_index("carbs:(\d+)") }}
-        unit_of_measurement: "g"          
+    sensors:       
 
       ## to get the current view of my tablet for UI automations 
       tablet_view:
@@ -340,40 +243,6 @@ sensor:
         friendly_name: "Full Date"
         value_template: "{{ states('sensor.day') }}, {{ states('sensor.month') }} {{ now().year }}"
         
-        
-      ## Vaccuum templates, for showing attributes as sensors, etc.
-        
-      vacuum_status:
-        friendly_name: "Vacuum - Status"
-        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.status }}"
-
-      vacuum_cleaning_status:
-        friendly_name: "Vacuum - Cleaning Status"
-        value_template: "Cleaning {{ states('input_text.room_cleaning') }}"
-
-      vacuum_battery:
-        friendly_name: "Vacuum - Battery"
-        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_level }}"
-        device_class: battery
-        unit_of_measurement: '%'
-
-      vacuum_fan:
-        friendly_name: "Vacuum - Fan Speed"
-        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.fan_speed }}"
-
-      vacuum_battery_icon:
-        friendly_name: "Vacuum - Battery Icon"
-        icon_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_icon }}"
-        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_icon }}"
-
-      vacuum_cleaning_time:
-        friendly_name: "Vacuum - Cleaning Time"
-        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaning_time }}"
-
-      vacuum_cleaned_area:
-        friendly_name: "Vacuum - Cleaned Area"
-        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaned_area }}"
-        
 
 
 #################################################################
@@ -382,55 +251,156 @@ sensor:
 
      
 light:
- - platform: group
-   name: Kitchen Lights
-   entities:
-    - light.kitchen_1
-    - light.kitchen_2
-    - light.kitchen_3
-    - light.kitchen_4
-    
- - platform: group
-   name: Roof Lights
-   entities:
-     - light.roof_garden
-     - light.roof_plants
-    
- - platform: group
-   name: Kitchen Fridge Lights
-   entities:
-     - light.kitchen_1
-     - light.kitchen_2
- - platform: group
-   name: Kitchen Sink Lights
-   entities:
-     - light.kitchen_3
-     - light.kitchen_4   
+  - platform: template
+    lights:
+      living_3:
+        friendly_name: "LivingRoom Light 3"
+        level_template: >-
+          {% if is_state('switch.living_3','on') %}255{% else %}0{% endif %}
+        value_template: >-
+          {{ is_state('switch.living_3','on') }}
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.living_3
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.living_3
+        set_level:
+          service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
+          entity_id: switch.living_3
+      master_1:
+        friendly_name: "Master Light 1"
+        level_template: >-
+          {% if is_state('switch.master_1','on') %}255{% else %}0{% endif %}
+        value_template: >-
+          {{ is_state('switch.master_1','on') }}
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.master_1
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.master_1
+        set_level:
+          service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
+          entity_id: switch.master_1
+      master_2:
+        friendly_name: "Master Light 2"
+        level_template: >-
+          {% if is_state('switch.master_2','on') %}255{% else %}0{% endif %}
+        value_template: >-
+          {{ is_state('switch.master_2','on') }}
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.master_2
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.master_2
+        set_level:
+          service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
+          entity_id: switch.master_2
+      master_3:
+        friendly_name: "Master Light 3"
+        level_template: >-
+          {% if is_state('switch.master_3','on') %}255{% else %}0{% endif %}
+        value_template: >-
+          {{ is_state('switch.master_3','on') }}
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.master_3
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.master_3
+        set_level:
+          service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
+          entity_id: switch.master_3
+      hallway_1:
+        friendly_name: "Hallway Light 1"
+        level_template: >-
+          {% if is_state('switch.hallway_1','on') %}255{% else %}0{% endif %}
+        value_template: >-
+          {{ is_state('switch.hallway_1','on') }}
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.hallway_1
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.hallway_1
+        set_level:
+          service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
+          entity_id: switch.hallway_1
+      garden_1:
+        friendly_name: "Garden Light 1"
+        level_template: >-
+          {% if is_state('switch.garden_1','on') %}255{% else %}0{% endif %}
+        value_template: >-
+          {{ is_state('switch.garden_1','on') }}
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.garden_1
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.garden_1
+        set_level:
+          service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
+          entity_id: switch.garden_1
 
- - platform: group
-   name: Living Room Lights
-   entities:
-     - light.couch
-     - light.table
-     - light.plant_table 
+      garden_2:
+        friendly_name: "Garden Light 2"
+        level_template: >-
+          {% if is_state('switch.garden_2','on') %}255{% else %}0{% endif %}
+        value_template: >-
+          {{ is_state('switch.garden_2','on') }}
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.garden_2
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.garden_2
+        set_level:
+          service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
+          entity_id: switch.garden_2
+
+  - platform: group
+    name: Living Room Lights
+    entities:
+      - light.living_1
+      - light.living_2
+      - light.living_3
     
- - platform: group
-   name: Toilet Lights
-   entities:
-     - light.toilet_1
-     - light.toilet_2    
-    
- - platform: group
-   name: Bedroom Lights
-   entities:
-     - light.bedroom_roof
-     - light.bed
-     
- - platform: group
-   name: Stairs Lights
-   entities:
-     - light.stairs_2
-     - light.door
- 
+  - platform: group
+    name: Master Bedroom Lights
+    entities:
+      - light.master_1
+      - light.master_2
+      - light.master_3
+
+  - platform: group
+    name: Bedroom Lights
+    entities:
+      - light.bedroom_1
+
+  - platform: group
+    name: Hallway Lights
+    entities:
+      - light.hallway_1
+
+  - platform: group
+    name: Kitchen Lights
+    entities:
+      - light.kitchen_1
+
+  - platform: group
+    name: Gadren Lights
+    entities:
+      - light.garden_1
+      - light.garden_2
+
+  - platform: group
+    name: Bathroom Lights
+    entities:
+      - light.bathroom_1
+      - light.bathroom_2
+
+
 
 

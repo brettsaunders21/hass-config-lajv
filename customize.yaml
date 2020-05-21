@@ -1,7 +1,1 @@
 customize:
-switch.power:
-  icon: mdi:power
-switch.speakers_vol_up:
-  icon: mdi:volume-plus
-switch.speakers_vol_down:
-  icon: mdi:volume-minus
