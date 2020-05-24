@@ -1,71 +1,50 @@
-roof:
-    name: Roof
-    entities:
-      - light.roof_garden
-      - light.roof_plants
 kitchen:
     name: Kitchen
     entities:
       - light.kitchen_1
-      - light.kitchen_2
-      - light.kitchen_3
-      - light.kitchen_4
-kitchen_fridge:
-    name: Kitchen Fridge
+living:
+    name: Living Room
     entities:
-      - light.kitchen_1
-      - light.kitchen_2
-kitchen_sink:
-    name: Kitchen Sink
+      - light.living_1
+      - light.living_2
+      - light.living_3
+master:
+    name: Master Bedroom
     entities:
-      - light.kitchen_3
-      - light.kitchen_4    
-livingroom:
-    name: LivingRoom
-    entities:
-      - light.couch
-      - light.table
-      - light.plant_table
-toilet:
-    name: Toilet
-    entities:
-      - light.toilet_1
-      - light.toilet_2
-study:
-    name: Study
-    entities:
-      - light.study_2
+      - light.master_1
+      - light.master_2
+      - light.master_3
 bedroom:
     name: Bedroom
     entities:
-      - light.bedroom_roof
-      - light.bed
-stairs:
-    name: Stairs
+      - light.bedroom_1
+hallway:
+    name: Hallway
     entities:
-      - light.stairs_2
-      - light.door
-balcony:
-    name: Balcony
+      - light.hallway_1
+garden:
+    name: Garden
     entities:
-      - light.balcony_2
+      - light.garden_1
+      - light.garden_2
+bathroom:
+    name: Bathroom
+    entities:
+      - light.bathroom_1
+      - light.bathroom_2
 all_lights:
     name: All Lights
     entities:
-      - light.roof_garden
-      - light.roof_plants    
+      - light.bathroom_1
+      - light.bathroom_2  
+      - light.garden_1
+      - light.garden_2
+      - light.hallway_1
+      - light.bedroom_1
+      - light.master_1
+      - light.master_2
+      - light.master_3
+      - light.living_1
+      - light.living_2
+      - light.living_3
       - light.kitchen_1
-      - light.kitchen_2
-      - light.kitchen_3
-      - light.kitchen_4    
-      - light.couch
-      - light.table
-      - light.plant_table    
-      - light.toilet_1
-      - light.toilet_2   
-      - light.study_2    
-      - light.bedroom_roof
-      - light.bed    
-      - light.stairs_2
-      - light.door    
-      - light.balcony_2      

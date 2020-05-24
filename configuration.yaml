@@ -251,155 +251,68 @@ sensor:
 
      
 light:
-  - platform: template
-    lights:
-      living_3:
-        friendly_name: "LivingRoom Light 3"
-        level_template: >-
-          {% if is_state('switch.living_3','on') %}255{% else %}0{% endif %}
-        value_template: >-
-          {{ is_state('switch.living_3','on') }}
-        turn_on:
-          service: switch.turn_on
-          entity_id: switch.living_3
-        turn_off:
-          service: switch.turn_off
-          entity_id: switch.living_3
-        set_level:
-          service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
-          entity_id: switch.living_3
-      master_1:
-        friendly_name: "Master Light 1"
-        level_template: >-
-          {% if is_state('switch.master_1','on') %}255{% else %}0{% endif %}
-        value_template: >-
-          {{ is_state('switch.master_1','on') }}
-        turn_on:
-          service: switch.turn_on
-          entity_id: switch.master_1
-        turn_off:
-          service: switch.turn_off
-          entity_id: switch.master_1
-        set_level:
-          service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
-          entity_id: switch.master_1
-      master_2:
-        friendly_name: "Master Light 2"
-        level_template: >-
-          {% if is_state('switch.master_2','on') %}255{% else %}0{% endif %}
-        value_template: >-
-          {{ is_state('switch.master_2','on') }}
-        turn_on:
-          service: switch.turn_on
-          entity_id: switch.master_2
-        turn_off:
-          service: switch.turn_off
-          entity_id: switch.master_2
-        set_level:
-          service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
-          entity_id: switch.master_2
-      master_3:
-        friendly_name: "Master Light 3"
-        level_template: >-
-          {% if is_state('switch.master_3','on') %}255{% else %}0{% endif %}
-        value_template: >-
-          {{ is_state('switch.master_3','on') }}
-        turn_on:
-          service: switch.turn_on
-          entity_id: switch.master_3
-        turn_off:
-          service: switch.turn_off
-          entity_id: switch.master_3
-        set_level:
-          service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
-          entity_id: switch.master_3
-      hallway_1:
-        friendly_name: "Hallway Light 1"
-        level_template: >-
-          {% if is_state('switch.hallway_1','on') %}255{% else %}0{% endif %}
-        value_template: >-
-          {{ is_state('switch.hallway_1','on') }}
-        turn_on:
-          service: switch.turn_on
-          entity_id: switch.hallway_1
-        turn_off:
-          service: switch.turn_off
-          entity_id: switch.hallway_1
-        set_level:
-          service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
-          entity_id: switch.hallway_1
-      garden_1:
-        friendly_name: "Garden Light 1"
-        level_template: >-
-          {% if is_state('switch.garden_1','on') %}255{% else %}0{% endif %}
-        value_template: >-
-          {{ is_state('switch.garden_1','on') }}
-        turn_on:
-          service: switch.turn_on
-          entity_id: switch.garden_1
-        turn_off:
-          service: switch.turn_off
-          entity_id: switch.garden_1
-        set_level:
-          service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
-          entity_id: switch.garden_1
 
-      garden_2:
-        friendly_name: "Garden Light 2"
-        level_template: >-
-          {% if is_state('switch.garden_2','on') %}255{% else %}0{% endif %}
-        value_template: >-
-          {{ is_state('switch.garden_2','on') }}
-        turn_on:
-          service: switch.turn_on
-          entity_id: switch.garden_2
-        turn_off:
-          service: switch.turn_off
-          entity_id: switch.garden_2
-        set_level:
-          service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
-          entity_id: switch.garden_2
+- platform: switch
+  entity_id: switch.living_3
 
-  - platform: group
-    name: Living Room Lights
-    entities:
-      - light.living_1
-      - light.living_2
-      - light.living_3
-    
-  - platform: group
-    name: Master Bedroom Lights
-    entities:
-      - light.master_1
-      - light.master_2
-      - light.master_3
+- platform: switch
+  entity_id: switch.master_1
 
-  - platform: group
-    name: Bedroom Lights
-    entities:
-      - light.bedroom_1
+- platform: switch
+  entity_id: switch.master_2
 
-  - platform: group
-    name: Hallway Lights
-    entities:
-      - light.hallway_1
+- platform: switch
+  entity_id: switch.master_3
 
-  - platform: group
-    name: Kitchen Lights
-    entities:
-      - light.kitchen_1
+- platform: switch
+  entity_id: switch.hallway_1
 
-  - platform: group
-    name: Gadren Lights
-    entities:
-      - light.garden_1
-      - light.garden_2
+- platform: switch
+  entity_id: switch.garden_1
 
-  - platform: group
-    name: Bathroom Lights
-    entities:
-      - light.bathroom_1
-      - light.bathroom_2
+- platform: switch
+  entity_id: switch.garden_2
+
+- platform: group
+  name: Living Room Lights
+  entities:
+    - light.living_1
+    - light.living_2
+    - light.living_3
+  
+- platform: group
+  name: Master Bedroom Lights
+  entities:
+    - light.master_1
+    - light.master_2
+    - light.master_3
+
+- platform: group
+  name: Bedroom Lights
+  entities:
+    - light.bedroom_1
+
+- platform: group
+  name: Hallway Lights
+  entities:
+    - light.hallway_1
+
+- platform: group
+  name: Kitchen Lights
+  entities:
+    - light.kitchen_1
+
+- platform: group
+  name: Gadren Lights
+  entities:
+    - light.garden_1
+    - light.garden_2
+
+- platform: group
+  name: Bathroom Lights
+  entities:
+    - light.bathroom_1
+    - light.bathroom_2
 
 
 
